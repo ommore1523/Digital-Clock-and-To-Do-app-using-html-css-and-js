@@ -1,0 +1,169 @@
+
+<!doctype html>
+<html lang="en">
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1,
+            shrink-to-fit=no">
+
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+            integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z"
+            crossorigin="anonymous">
+
+            <style>
+                h1{ 
+                    padding-right: 89px;
+                }
+            </style>
+
+        <title>To-do</title>
+    </head>
+    <body>
+        <div class="container border border-dark rounded mt-3">
+        <h1 class="text-center mt-3 mb-0 bg-secondary text-white" >To-Do App</h1>
+
+        <div class="bg-light text-dark p-2 rounded ">
+            <div class="form-group ">
+              <label for="title">Title</label>
+              <input type="text" class="form-control" id="title" aria-describedby="emailHelp">
+              
+            </div>
+            <div class="form-group">
+              <label for="description">Description</label>
+              <textarea type="text" class="form-control" id="description" cols="30" rows="5"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary" id="add">Click to add</button>
+        </div>
+       <hr>
+
+          
+          <table class="table table-hover mt-3">
+            <thead class="thead-dark">
+              <tr>
+                <th scope="col">Sr</th>
+                <th scope="col">Title</th>
+                <th scope="col">Description</th>
+                <th scope="col">Delete</th>
+              </tr>
+            </thead>
+            <tbody id="tablebody">
+              <tr>
+                <th scope="row"></th>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        
+
+
+
+        <script>
+           //code for update function
+            function update() {
+                console.log("Updating list ....")
+                //get input field from user
+                tit=document.getElementById('title').value;
+                desc=document.getElementById('description').value;
+                console.log("data",tit,desc)
+
+                
+                   
+                //if local storage data is null
+                if (localStorage.getItem('itemjson')==null){
+                    itemJsonArray=[];
+
+                    //if title and description is null it will not add data 
+                    if( (tit !== null && tit !== '') && (desc !== null && desc !== '') ) {
+                    //if not null push data to  array  
+                    itemJsonArray.push([tit,desc])
+                    //save this array to localstorage
+                    localStorage.setItem('itemjson',JSON.stringify(itemJsonArray))
+                    //reload a page
+                    location.reload()
+                    }
+                }
+                else{
+
+                    //if not local storage null
+                    //pick up itemjson list [  [][][]  ]
+                    
+                    itemJsonArraystr=localStorage.getItem('itemjson')
+
+                    //parse it 
+                    itemJsonArray=JSON.parse(itemJsonArraystr)
+
+                    //it both element are not null add to localstorage
+                    if( (tit !== null && tit !== '') && (desc !== null && desc !== '') ) {
+                    itemJsonArray.push([tit,desc])
+                    localStorage.setItem('itemjson',JSON.stringify(itemJsonArray))
+                    //reload after add
+                    location.reload()
+                    }
+                }
+
+                 //get a table body id 
+                tablebody=document.getElementById('tablebody')
+                //define empty string
+                let str="";
+                // for each element in itemjson array fill the table one by one
+                itemJsonArray.forEach((element,index)=>{
+                   str += `
+                   <tr>
+                     <th scope="row">${index+1}</th>
+                     <td> ${element[0]}</td>
+                     <td>${element[1]}</td>
+                     <td>
+                         
+                         <button type="button" class="btn btn-primary btn-sm" onclick="deleted(${index})">Delete</button></td>
+                   </tr> ` ;
+                })
+                tablebody.innerHTML=str;
+            }
+        // update a all data on clicking add button
+           add=document.getElementById('add');
+           add.addEventListener('click',update)
+           update();
+
+
+        // delete a item on delete
+           function deleted(item){
+               //function will give a index no of delete item using on click funtion in button tag
+                    console.log("delete",item)
+                    //geta itemjson list 
+                    itemJsonArraystr=localStorage.getItem('itemjson')
+                    //parse a list 
+                    itemJsonArray=JSON.parse(itemJsonArraystr)
+                    //delete item 
+                    itemJsonArray.splice(item,1);
+                    //convert to string 
+                    localStorage.setItem('itemjson',JSON.stringify(itemJsonArray))
+                    //reload page
+                    location.reload()
+           }
+           
+        </script>
+
+
+        <!-- Optional JavaScript -->
+        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+            integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+            crossorigin="anonymous"></script>
+        <script
+            src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+            integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+            crossorigin="anonymous"></script>
+        <script
+            src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+            integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
+            crossorigin="anonymous"></script>
+    </body>
+</html>
+
